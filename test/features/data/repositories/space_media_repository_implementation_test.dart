@@ -4,8 +4,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:nasa_clean_architecture/core/errors/exceptions.dart';
 import 'package:nasa_clean_architecture/core/errors/failures.dart';
 import 'package:nasa_clean_architecture/features/data/datasources/space_media_datasource.dart';
-import 'package:nasa_clean_architecture/features/data/models/space_media_model.dart';
 import 'package:nasa_clean_architecture/features/data/repositories/space_media_repository_implementation.dart';
+import '../../mocks/date_mock.dart';
+import '../../mocks/space_media_model_mock.dart';
 
 class MockSpaceMediaDatasource extends Mock implements ISpaceMediaDatasource {}
 
@@ -18,30 +19,22 @@ void main() {
     repository = SpaceMediaRepositoryImplementation(datasource);
   });
 
-  final spaceMediaModel = SpaceMediaModel(
-    description: 'description',
-    mediaType: 'image',
-    title: 'title',
-    mediaUrl: 'mediaUrl',
-  );
-
-  final date = DateTime(2021, 02, 02);
 
   test('should return SpaceMediaModel when calls the datasource', () async {
-    when(() => datasource.getSpaceMediaFromDate(date))
-        .thenAnswer((_) async => spaceMediaModel);
-    final result = await repository.getSpaceMediaFromDate(date);
-    expect(result, Right(spaceMediaModel));
-    verify(() => datasource.getSpaceMediaFromDate(date)).called(1);
+    when(() => datasource.getSpaceMediaFromDate(dateMock))
+        .thenAnswer((_) async => spaceMediaModelMock);
+    final result = await repository.getSpaceMediaFromDate(dateMock);
+    expect(result, Right(spaceMediaModelMock));
+    verify(() => datasource.getSpaceMediaFromDate(dateMock)).called(1);
   });
 
   test(
       'should return a ServerFailure when the call to datasource is unsuccessfull',
       () async {
-    when(() => datasource.getSpaceMediaFromDate(date))
+    when(() => datasource.getSpaceMediaFromDate(dateMock))
         .thenThrow(ServerException());
-    final result = await repository.getSpaceMediaFromDate(date);
+    final result = await repository.getSpaceMediaFromDate(dateMock);
     expect(result, Left(ServerFailure()));
-    verify(() => datasource.getSpaceMediaFromDate(date)).called(1);
+    verify(() => datasource.getSpaceMediaFromDate(dateMock)).called(1);
   });
 }
