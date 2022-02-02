@@ -4,7 +4,7 @@ class SpaceMediaEntity extends Equatable {
   final String description;
   final String mediaType;
   final String title;
-  final String mediaUrl;
+  final String? mediaUrl;
 
   SpaceMediaEntity({
     required this.description,
@@ -14,7 +14,7 @@ class SpaceMediaEntity extends Equatable {
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         this.description,
         this.mediaType,
         this.title,
